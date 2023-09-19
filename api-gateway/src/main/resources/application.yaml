@@ -1,0 +1,29 @@
+server:
+  port: 8060
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka/
+
+management:
+  tracing:
+    sampling:
+      probability: 1.0
+
+spring:
+  application:
+    name: api-gateway
+  config:
+    import: "optional:configserver:http://localhost:8088"
+  cloud:
+    gateway:
+      routes:
+        - id: pacient-service
+          uri: lb://pacient-service
+          predicates:
+            - Path=/pacients/**
+        - id: doctor-service
+          uri: lb://doctor-service
+          predicates:
+            - Path=/doctors/**
